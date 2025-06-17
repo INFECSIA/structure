@@ -20,13 +20,15 @@
     --spacing-md: 16px;
     --spacing-lg: 24px;
     --spacing-xl: 32px;
-    --font-family: 'Segoe UI', system-ui, sans-serif;
+    --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     --font-size-sm: 14px;
     --font-size-md: 16px;
     --font-size-lg: 18px;
+    --transition-duration: 0.3s;
 }
 
-* {
+/* Reset & Base Styles */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -41,6 +43,19 @@ body {
     padding: var(--spacing-xl);
 }
 
+/* Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Layout */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -55,50 +70,53 @@ body {
     position: relative;
 }
 
-.export-controls {
-    position: absolute;
-    top: var(--spacing-md);
-    right: var(--spacing-md);
+/* Controls */
+.controls {
     display: flex;
-    gap: var(--spacing-sm);
-}
-
-.import-export-btn, .add-root-btn, .action-btn, .modal-btn {
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.import-export-btn {
-    background: var(--secondary-color);
-    color: white;
-    border: none;
-    padding: var(--spacing-xs) var(--spacing-md);
-    border-radius: var(--border-radius);
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
 }
 
-.import-export-btn:hover {
-    opacity: 0.9;
-}
-
-.add-root-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
+.btn {
+    cursor: pointer;
     padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
     border-radius: var(--border-radius);
-    margin-bottom: var(--spacing-xl);
+    font-size: var(--font-size-md);
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-sm);
+    transition: all var(--transition-duration);
 }
 
-.add-root-btn:hover {
+.primary-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.export-btn {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.import-btn {
+    background: var(--info-color);
+    color: white;
+}
+
+.btn:hover {
     filter: brightness(0.9);
+    transform: translateY(-1px);
 }
 
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Tree Structure */
 .tree {
     list-style: none;
     padding-left: 0;
@@ -114,14 +132,24 @@ body {
     border-radius: var(--border-radius);
     cursor: move;
     user-select: none;
-    transition: all 0.3s ease;
+    transition: all var(--transition-duration);
 }
 
 .tree li:hover {
     background: var(--bg-dark);
     border-color: var(--secondary-color);
+    box-shadow: var(--shadow-light);
 }
 
+.tree li.dragging {
+    opacity: 0.5;
+}
+
+.tree li.drop-target {
+    border: 2px dashed var(--primary-color);
+}
+
+/* Tree Node Markers */
 .tree li::before {
     content: '';
     position: absolute;
@@ -131,30 +159,15 @@ body {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--primary-color);
+    transition: background var(--transition-duration);
 }
 
 .tree > li::before { background: var(--primary-color); }
 .tree ul li::before { background: var(--secondary-color); }
 .tree ul ul li::before { background: var(--warning-color); }
-.tree ul ul ul li::before { background: #9c27b0; }
-.tree ul ul ul ul li::before { background: #e91e63; }
-.tree ul ul ul ul ul li::before { background: #009688; }
-.tree ul ul ul ul ul ul li::before { background: #795548; }
+.tree ul ul ul li::before { background: var(--info-color); }
 
-.tree ul {
-    padding-left: 30px;
-    margin-left: 0;
-    border-left: 2px solid var(--border-color);
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-}
-
-.tree .expanded {
-    max-height: 1000px;
-}
-
+/* Node Content */
 .node-content {
     display: flex;
     align-items: center;
@@ -165,15 +178,22 @@ body {
 .node-actions {
     display: flex;
     gap: var(--spacing-xs);
+    opacity: 0.7;
+    transition: opacity var(--transition-duration);
+}
+
+.tree li:hover .node-actions {
+    opacity: 1;
 }
 
 .action-btn {
     background: none;
     border: none;
     padding: var(--spacing-xs);
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     color: var(--text-light);
     font-size: var(--font-size-sm);
+    transition: all var(--transition-duration);
 }
 
 .action-btn:hover {
@@ -181,6 +201,7 @@ body {
     color: var(--text-color);
 }
 
+/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -192,6 +213,7 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    backdrop-filter: blur(3px);
 }
 
 .modal-content {
@@ -201,6 +223,12 @@ body {
     width: 400px;
     max-width: 90%;
     box-shadow: var(--shadow);
+    animation: modalFade 0.3s;
+}
+
+@keyframes modalFade {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .modal-input {
@@ -210,6 +238,12 @@ body {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     font-size: var(--font-size-md);
+    transition: border-color var(--transition-duration);
+}
+
+.modal-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
 }
 
 .modal-actions {
@@ -218,20 +252,7 @@ body {
     justify-content: flex-end;
 }
 
-.confirm-btn {
-    background: var(--primary-color);
-    color: white;
-}
-
-.cancel-btn {
-    background: var(--danger-color);
-    color: white;
-}
-
-.modal-btn:hover {
-    filter: brightness(0.9);
-}
-
+/* Loading Indicator */
 .loading-indicator {
     position: fixed;
     top: 20px;
@@ -243,6 +264,7 @@ body {
     border-radius: 20px;
     display: none;
     animation: pulse 1.5s infinite;
+    z-index: 1001;
 }
 
 @keyframes pulse {
@@ -251,6 +273,7 @@ body {
     100% { opacity: 0.8; }
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
     body {
         padding: var(--spacing-md);
@@ -260,32 +283,40 @@ body {
         padding: var(--spacing-md);
     }
 
-    .export-controls {
-        position: static;
-        justify-content: flex-end;
-        margin-bottom: var(--spacing-md);
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .tree li {
-        padding: var(--spacing-xs) var(--spacing-sm) var(--spacing-xs) 30px;
-    }
-    
-    .modal-content {
-        width: 90%;
-        padding: var(--spacing-md);
+    .export-controls {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
     }
 }
 
 @media (max-width: 480px) {
-    .import-export-btn span {
+    .btn i {
+        margin-right: 0;
+    }
+    
+    .btn span {
         display: none;
     }
     
-    .node-actions {
-        gap: var(--spacing-xs);
+    .tree li {
+        padding: var(--spacing-xs) var(--spacing-sm);
     }
-    
-    .action-btn {
-        padding: var(--spacing-xs);
+}
+
+/* Print Styles */
+@media print {
+    .controls, .node-actions {
+        display: none;
+    }
+
+    .tree li {
+        break-inside: avoid;
+        page-break-inside: avoid;
     }
 }
