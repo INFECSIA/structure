@@ -1,120 +1,165 @@
 const TreeManager = (() => {
+    // Configuration
     const CONFIG = {
         MAX_DEPTH: 7,
+        MAX_FILE_SIZE: 512000, // 500KB
         COLORS: [
-            '#4CAF50', '#2196F3', '#ff9800',
-            '#9c27b0', '#e91e63', '#009688',
-            '#795548', '#ff0000'
-        ]
+            '#4CAF50', '#2196F3', '#ff9800', '#9c27b0',
+            '#e91e63', '#009688', '#795548', '#ff0000'
+        ],
+        AUTOSAVE_DELAY: 1000,
+        SEARCH_DELAY: 300
     };
 
-    let state = {
+    // State Management
+    const state = {
         currentAction: null,
         selectedNode: null,
         draggedElement: null,
         undoStack: [],
         redoStack: [],
-        searchTimeout: null
+        searchTimeout: null,
+        autosaveTimeout: null
     };
 
+    // DOM Elements
     const DOM = {
         tree: document.getElementById('tree'),
         modal: document.getElementById('modal'),
         categoryName: document.getElementById('categoryName'),
         fileInput: document.getElementById('fileInput'),
         loader: document.getElementById('loader'),
-        searchInput: document.getElementById('searchInput')
+        searchInput: document.getElementById('searchInput'),
+        confirmBtn: document.getElementById('confirmBtn'),
+        cancelBtn: document.getElementById('cancelBtn')
     };
 
+    // Initialization
     const init = () => {
         bindEvents();
         initializeTree();
-        initializeSearch();
+        setupKeyboardNavigation();
+        setupDragAndDrop();
     };
 
+    // Event Bindings
     const bindEvents = () => {
+        // Button Events
         document.getElementById('addRootBtn').addEventListener('click', () => showModal('add-root'));
         document.getElementById('importBtn').addEventListener('click', () => DOM.fileInput.click());
         document.getElementById('exportTxt').addEventListener('click', () => exportTree('txt'));
         document.getElementById('exportHtml').addEventListener('click', () => exportTree('html'));
         document.getElementById('exportPdf').addEventListener('click', () => exportTree('pdf'));
 
-        document.getElementById('confirmBtn').addEventListener('click', handleConfirm);
-        document.getElementById('cancelBtn').addEventListener('click', hideModal);
+        // Modal Events
+        DOM.confirmBtn.addEventListener('click', handleConfirm);
+        DOM.cancelBtn.addEventListener('click', hideModal);
+        DOM.categoryName.addEventListener('keypress', e => {
+            if (e.key === 'Enter') handleConfirm();
+        });
 
+        // File Import Event
         DOM.fileInput.addEventListener('change', handleFileUpload);
 
+        // Search Event
+        DOM.searchInput.addEventListener('input', debounce(handleSearch, CONFIG.SEARCH_DELAY));
+
+        // Global Events
         document.addEventListener('click', handleExternalClick);
         document.addEventListener('keydown', handleKeyboardShortcuts);
-
-        DOM.searchInput.addEventListener('input', handleSearch);
     };
 
-    const initializeTree = () => {
-        if (localStorage.treeData) {
-            rebuildTreeFromText(localStorage.treeData);
-        }
-    };
-
-    const handleDragStart = function(e) {
-        state.draggedElement = this;
-        this.classList.add('dragging');
-        e.dataTransfer.effectAllowed = 'move';
-    };
-
-    const handleDragOver = function(e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        const target = e.target.closest('li');
-        document.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
-        target?.classList.add('drop-target');
-    };
-
-    const handleDragEnd = function() {
-        this.classList.remove('dragging');
-        document.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
-    };
-
-    const handleDrop = function(e) {
-        e.preventDefault();
-        const target = e.target.closest('li');
-        if (!target || target === state.draggedElement) return;
-
-        const targetList = target.querySelector('ul') || createChildList(target);
-        targetList.appendChild(state.draggedElement);
-        targetList.classList.add('expanded');
-        saveTreeState();
-    };
-
-    const createNode = (name) => {
+    // Tree Node Creation and Management
+    const createNode = (name, isRoot = false) => {
         const li = document.createElement('li');
         li.draggable = true;
+        li.setAttribute('role', 'treeitem');
+        li.setAttribute('aria-expanded', 'false');
+        
         li.innerHTML = `
             <div class="node-content">
                 <span>${sanitizeInput(name)}</span>
                 <div class="node-actions">
-                    <button class="action-btn" data-action="add"><i class="fas fa-plus"></i></button>
-                    <button class="action-btn" data-action="edit"><i class="fas fa-edit"></i></button>
-                    <button class="action-btn" data-action="delete"><i class="fas fa-trash"></i></button>
+                    <button class="action-btn" data-action="add" aria-label="Add child category">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="action-btn" data-action="edit" aria-label="Edit category">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn" data-action="delete" aria-label="Delete category">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
             </div>
         `;
-        li.addEventListener('dragstart', handleDragStart);
-        li.addEventListener('dragover', handleDragOver);
-        li.addEventListener('dragend', handleDragEnd);
-        li.addEventListener('drop', handleDrop);
-        li.querySelector('.node-actions').addEventListener('click', handleNodeActions);
+
+        setupNodeEventListeners(li);
         return li;
     };
 
+    const setupNodeEventListeners = (node) => {
+        node.addEventListener('dragstart', handleDragStart);
+        node.addEventListener('dragover', handleDragOver);
+        node.addEventListener('dragend', handleDragEnd);
+        node.addEventListener('drop', handleDrop);
+        node.querySelector('.node-actions').addEventListener('click', handleNodeActions);
+    };
+
+    // Drag and Drop Functionality
+    const setupDragAndDrop = () => {
+        const handleDragStart = function(e) {
+            state.draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            
+            // Accessibility
+            this.setAttribute('aria-grabbed', 'true');
+        };
+
+        const handleDragOver = function(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            const target = e.target.closest('li');
+            if (!target || !isValidDropTarget(target)) return;
+            
+            clearDropTargets();
+            target.classList.add('drop-target');
+        };
+
+        const handleDragEnd = function() {
+            this.classList.remove('dragging');
+            this.setAttribute('aria-grabbed', 'false');
+            clearDropTargets();
+        };
+
+        const handleDrop = function(e) {
+            e.preventDefault();
+            const target = e.target.closest('li');
+            if (!target || target === state.draggedElement || !isValidDropTarget(target)) return;
+
+            const targetList = target.querySelector('ul') || createChildList(target);
+            targetList.appendChild(state.draggedElement);
+            target.setAttribute('aria-expanded', 'true');
+            
+            scheduleAutosave();
+        };
+    };
+
+    // Node Actions
     const handleNodeActions = (e) => {
         const button = e.target.closest('button');
         if (!button) return;
 
         const action = button.dataset.action;
         const node = button.closest('li');
+        
         switch(action) {
             case 'add':
+                if (getNodeDepth(node) >= CONFIG.MAX_DEPTH) {
+                    showError(`Maximum depth of ${CONFIG.MAX_DEPTH} levels reached`);
+                    return;
+                }
                 showModal('add-child', node);
                 break;
             case 'edit':
@@ -126,241 +171,144 @@ const TreeManager = (() => {
         }
     };
 
+    // Tree Operations
     const addNode = (parent, name) => {
         const parentList = parent.querySelector('ul') || createChildList(parent);
-        parentList.appendChild(createNode(name));
-        parentList.classList.add('expanded');
-        saveTreeState();
+        const newNode = createNode(name);
+        parentList.appendChild(newNode);
+        parent.setAttribute('aria-expanded', 'true');
+        
+        scheduleAutosave();
+        return newNode;
     };
 
     const editNode = (node, newName) => {
-        node.querySelector('span').textContent = sanitizeInput(newName);
-        saveTreeState();
+        const nameSpan = node.querySelector('span');
+        const oldName = nameSpan.textContent;
+        nameSpan.textContent = sanitizeInput(newName);
+        
+        // Save state for undo
+        saveState({
+            type: 'edit',
+            node: node,
+            oldValue: oldName,
+            newValue: newName
+        });
+        
+        scheduleAutosave();
     };
 
     const deleteNode = (node) => {
-        if (confirm('Kateqoriyanı silmək istədiyinizə əminsiniz?')) {
-            node.remove();
-            reorganizeTreeStructure();
-            saveTreeState();
-        }
-    };
-
-    const createChildList = (parent) => {
-        const ul = document.createElement('ul');
-        parent.appendChild(ul);
-        return ul;
-    };
-
-    const showModal = (action, node = null) => {
-        state.currentAction = action;
-        state.selectedNode = node;
-        DOM.modal.style.display = 'flex';
-        DOM.categoryName.focus();
-    };
-
-    const hideModal = () => {
-        DOM.modal.style.display = 'none';
-        DOM.categoryName.value = '';
-    };
-
-    const handleConfirm = () => {
-        const name = DOM.categoryName.value.trim();
-        if (!name) return;
-        switch(state.currentAction) {
-            case 'add-root':
-                DOM.tree.appendChild(createNode(name));
-                break;
-            case 'add-child':
-                addNode(state.selectedNode, name);
-                break;
-            case 'edit':
-                editNode(state.selectedNode, name);
-                break;
-        }
-        hideModal();
-    };
-
-    const exportTree = (format) => {
-        const treeData = traverseTree(DOM.tree);
-        if (!treeData.trim()) return alert('Eksport üçün ağac boş ola bilməz!');
-        switch(format) {
-            case 'txt': downloadAsTxt(treeData); break;
-            case 'html': downloadAsHTML(treeData); break;
-            case 'pdf': generatePDF(treeData); break;
-        }
-    };
-
-    const traverseTree = (node, level = 0) => {
-        return Array.from(node.children).reduce((acc, child) => {
-            if (child.tagName === 'LI') {
-                acc += '\t'.repeat(level) + child.querySelector('span').textContent + '\n';
-                const sublist = child.querySelector('ul');
-                if (sublist) acc += traverseTree(sublist, level + 1);
-            }
-            return acc;
-        }, '');
-    };
-
-    const downloadAsTxt = (data) => {
-        const blob = new Blob([data], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `category_tree_${Date.now()}.txt`;
-        a.click();
-    };
-
-    const downloadAsHTML = (data) => {
-        const htmlContent = `<!DOCTYPE html>
-        <html>
-        <head>
-            <title>Kateqoriya Ağacı</title>
-            <style>
-                body { font-family: Arial; padding: 20px; }
-                ul { list-style: none; padding-left: 20px; }
-                li { margin: 5px 0; }
-                ${CONFIG.COLORS.map((color, index) => 
-                    `.level-${index} { color: ${color}; }`
-                ).join('\n')}
-            </style>
-        </head>
-        <body>
-            <ul>${convertToHTML(data)}</ul>
-        </body>
-        </html>`;
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `category_tree_${Date.now()}.html`;
-        a.click();
-    };
-
-    const generatePDF = (data) => {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFontSize(12);
-        let y = 20;
-        data.split('\n').forEach(line => {
-            if (y > 280) {
-                doc.addPage();
-                y = 20;
-            }
-            const level = (line.match(/\t/g) || []).length;
-            const name = line.trim();
-            doc.setTextColor(...hexToRgb(CONFIG.COLORS[Math.min(level, 7)]));
-            doc.text(`${'    '.repeat(level)}• ${name}`, 10, y);
-            y += 10;
+        if (!confirm('Kateqoriyanı silmək istədiyinizə əminsiniz?')) return;
+        
+        // Save state for undo
+        saveState({
+            type: 'delete',
+            node: node,
+            parentNode: node.parentNode,
+            nextSibling: node.nextSibling
         });
-        doc.save(`category_tree_${Date.now()}.pdf`);
+        
+        node.remove();
+        scheduleAutosave();
     };
 
-    const handleFileUpload = (event) => {
+    // Search Functionality
+    const handleSearch = (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const allNodes = DOM.tree.querySelectorAll('li');
+        
+        allNodes.forEach(node => {
+            const text = node.querySelector('span').textContent.toLowerCase();
+            const matches = text.includes(searchTerm);
+            
+            node.style.display = matches ? '' : 'none';
+            if (matches) expandAncestors(node);
+        });
+    };
+
+    // Import/Export Functionality
+    const handleFileUpload = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
-        if (file.size > 512000) {
-            alert('Maksimum fayl ölçüsü 500KB-dır!');
+        
+        if (file.size > CONFIG.MAX_FILE_SIZE) {
+            showError(`Maximum file size is ${CONFIG.MAX_FILE_SIZE / 1024}KB`);
             return;
         }
+
         showLoader();
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            rebuildTreeFromText(e.target.result);
+        try {
+            const content = await readFileContent(file);
+            rebuildTreeFromText(content);
+            scheduleAutosave();
+        } catch (error) {
+            showError('Error reading file');
+            console.error(error);
+        } finally {
             hideLoader();
-            saveTreeState();
-        };
-        reader.readAsText(file);
-    };
-
-    const rebuildTreeFromText = (text) => {
-        DOM.tree.innerHTML = '';
-        let lastNode = null;
-        let lastLevel = -1;
-        text.split('\n').forEach(line => {
-            const level = (line.match(/\t/g) || []).length;
-            const name = line.trim();
-            if (!name) return;
-            if (level === 0) {
-                lastNode = createNode(name);
-                DOM.tree.appendChild(lastNode);
-                lastLevel = 0;
-            } else {
-                while (lastLevel >= level && lastNode) {
-                    lastNode = lastNode.parentElement?.closest('li');
-                    lastLevel--;
-                }
-                if (lastNode) {
-                    addNode(lastNode, name);
-                    lastLevel = level;
-                }
-            }
-        });
-    };
-
-    const initializeSearch = () => {
-        const searchInput = DOM.searchInput;
-        searchInput.addEventListener('input', debounce((e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            searchNodes(searchTerm);
-        }, 300));
-    };
-
-    const searchNodes = (term) => {
-        const allNodes = DOM.tree.querySelectorAll('li span');
-        allNodes.forEach(node => {
-            const text = node.textContent.toLowerCase();
-            const li = node.closest('li');
-            if (text.includes(term)) {
-                li.style.display = '';
-                highlightAncestors(li);
-            } else {
-                li.style.display = 'none';
-            }
-        });
-    };
-
-    const highlightAncestors = (node) => {
-        let current = node;
-        while (current && current !== DOM.tree) {
-            if (current.tagName === 'LI') {
-                current.style.display = '';
-            }
-            current = current.parentElement;
+            event.target.value = ''; // Reset file input
         }
     };
 
+    const exportTree = async (format) => {
+        const treeData = traverseTree(DOM.tree);
+        if (!treeData.trim()) {
+            showError('Cannot export empty tree');
+            return;
+        }
+
+        try {
+            switch(format) {
+                case 'txt':
+                    await downloadAsTxt(treeData);
+                    break;
+                case 'html':
+                    await downloadAsHtml(treeData);
+                    break;
+                case 'pdf':
+                    await generatePdf(treeData);
+                    break;
+                default:
+                    throw new Error('Unsupported format');
+            }
+        } catch (error) {
+            showError(`Error exporting as ${format.toUpperCase()}`);
+            console.error(error);
+        }
+    };
+
+    // Utility Functions
     const debounce = (func, wait) => {
         let timeout;
         return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
             clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
+            timeout = setTimeout(() => func.apply(this, args), wait);
         };
     };
 
     const sanitizeInput = (input) => {
-        return input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const div = document.createElement('div');
+        div.textContent = input;
+        return div.innerHTML;
     };
 
-    const showLoader = () => {
-        DOM.loader.style.display = 'block';
+    const showError = (message) => {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        errorDiv.setAttribute('role', 'alert');
+        
+        document.body.appendChild(errorDiv);
+        setTimeout(() => errorDiv.remove(), 3000);
     };
 
-    const hideLoader = () => {
-        DOM.loader.style.display = 'none';
-    };
-
-    const saveTreeState = () => {
-        localStorage.treeData = traverseTree(DOM.tree);
-    };
-
+    // Public API
     return {
-        init
+        init,
+        exportTree
     };
 })();
 
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', TreeManager.init);
