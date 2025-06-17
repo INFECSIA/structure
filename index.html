@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Category Tree Management System">
     <title>Kateqoriya Ağacı</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,33 +12,46 @@
     <div class="container">
         <div class="tree-container">
             <div class="controls">
-                <button class="btn" id="addRootBtn">
+                <button class="btn primary-btn" id="addRootBtn" aria-label="Add Root Category">
                     <i class="fas fa-plus"></i> Əsas Kateqoriya Əlavə Et
                 </button>
-                <input type="text" id="searchInput" placeholder="Kateqoriya axtar...">
+                <input type="text" 
+                       id="searchInput" 
+                       placeholder="Kateqoriya axtar..." 
+                       aria-label="Search categories">
                 <div class="export-controls">
-                    <button class="btn" id="importBtn">
+                    <button class="btn import-btn" id="importBtn" aria-label="Import">
                         <i class="fas fa-upload"></i> Yüklə
                     </button>
-                    <button class="btn" id="exportTxt">
+                    <button class="btn export-btn" id="exportTxt" aria-label="Export as TXT">
                         <i class="fas fa-file-alt"></i> TXT
                     </button>
-                    <button class="btn" id="exportHtml">
+                    <button class="btn export-btn" id="exportHtml" aria-label="Export as HTML">
                         <i class="fas fa-file-code"></i> HTML
                     </button>
-                    <button class="btn" id="exportPdf">
+                    <button class="btn export-btn" id="exportPdf" aria-label="Export as PDF">
                         <i class="fas fa-file-pdf"></i> PDF
                     </button>
                 </div>
             </div>
-            <input type="file" id="fileInput" accept=".txt">
-            <ul class="tree" id="tree"></ul>
+            <input type="file" 
+                   id="fileInput" 
+                   accept=".txt,.json" 
+                   aria-label="Import file"
+                   style="display: none;">
+            <ul class="tree" id="tree" role="tree"></ul>
         </div>
     </div>
 
-    <div id="modal" class="modal">
+    <div id="modal" class="modal" role="dialog" aria-labelledby="modalTitle">
         <div class="modal-content">
-            <input type="text" class="modal-input" id="categoryName" placeholder="Kateqoriya adı" maxlength="50">
+            <h2 id="modalTitle" class="sr-only">Category Editor</h2>
+            <input type="text" 
+                   class="modal-input" 
+                   id="categoryName" 
+                   placeholder="Kateqoriya adı" 
+                   maxlength="50"
+                   aria-label="Category name">
             <div class="modal-actions">
                 <button class="btn cancel-btn" id="cancelBtn">Ləğv Et</button>
                 <button class="btn confirm-btn" id="confirmBtn">Təsdiq Et</button>
@@ -45,7 +59,9 @@
         </div>
     </div>
 
-    <div class="loading-indicator" id="loader">Yüklənir...</div>
+    <div class="loading-indicator" id="loader" role="alert" aria-live="polite">
+        Yüklənir...
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
