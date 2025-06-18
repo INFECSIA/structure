@@ -2,106 +2,108 @@ TEXNOLOJİ STRUKTURA GÖRƏ 6 NÖV:
 
 🔵 1. Landing Page
 🎯 Məqsəd:
-Məhsul, xidmət, tədbir və ya kampaniyanı tez tanıtmaq və konversiya toplamaq (məs: qeydiyyat, satış, abunə).
+Bir məhsul, xidmət, tədbir və ya kampaniyanı cəld və fokuslanmış şəkildə tanıtmaq, istifadəçidən konkret hərəkət (CTA: qeydiyyat, satış, abunə və s.) əldə etmək.
 
 ✅ Üstünlüklər:
-Sürətli yüklənmə və hazırlıq
+Sürətli yüklənmə və hazırlanma
+Yüksək dönüşüm (conversion) üçün optimallaşdırılmış
 Fokuslanmış istifadəçi təcrübəsi
-A/B test üçün idealdır
-Marketinq alətləri ilə yüksək uyğunluq (Pixel, GTM, Analytics)
+Marketinq və analitika alətləri ilə maksimum uyğunluq (Pixel, GTM, Analytics)
+A/B testləri və tez-tez iterasiya üçün əlverişli
 
 ⚠️ Zəif cəhətlər:
-SEO imkanları məhduddur
-Struktural genişlənmə üçün əlverişli deyil
+SEO imkanları məhduddur (az kontent və link strukturu)
+Struktural və funksional genişlənmə üçün uyğun deyil
 
 💡 Uyğun istifadə hallar:
-Reklam kampaniyası
-Məhsul öncə baxış (pre-launch)
-Seminar / tədbir qeydiyyatı
-Sadə satış (bir məhsul)
+Reklam və kampaniya səhifələri
+Məhsul və ya xidmətin tez təqdimatı
+Tədbir və seminar qeydiyyatı
+Pre-launch və ya single product satış
 
 🧰 Texnologiyalar:
-HTML + CSS + JS (vanilla və ya minimal framework)
-Tailwind, Bootstrap
-Vercel, Netlify host
-No-code alternativ: Webflow, Carrd, Framer
+HTML, CSS, Vanilla JS və ya minimal framework (Alpine.js və s.)
+UI Kit: Tailwind, Bootstrap
+Hosting: Vercel, Netlify
+No-code: Webflow, Carrd, Framer
+Analitika: Google Tag Manager, Facebook Pixel
 
 🔵 2. Multipage Website (Ənənəvi çox səhifəli sayt)
 🎯 Məqsəd:
-Korporativ, şəxsi brend, məlumat bazalı saytlar
-SEO dostu, informasiya strukturu genişdir
+Məlumatın strukturlaşdırılmış və SEO dostu şəkildə təqdimatı; müxtəlif səhifələr və kontent növləri olan brend, korporativ və şəxsi saytlar.
 
 ✅ Üstünlüklər:
-SEO üçün idealdır
-Menü strukturu ilə naviqasiya rahatdır
-Kontent müxtəlifliyi dəstəklənir (məqalələr, səhifələr, kontakt, blog və s.)
+Güclü SEO və geniş naviqasiya
+Mürəkkəb kontent və informasiya strukturları üçün əlverişli
+Fərqli səhifə və kontent növləri üçün çevik
 
 ⚠️ Zəif cəhətlər:
-İstifadəçi təcrübəsi mobil cihazlarda zəifləyə bilər
-Performans optimizasiyası çətinləşə bilər
+Böyük layihələrdə performans optimizasiyası əlavə diqqət tələb edir
+Manual idarəetmə və yenilənmə proseslərində çətinlik ola bilər (CMS olmadan)
 
 💡 Uyğun istifadə hallar:
-Şirkət vebsaytı
-Təhsil müəssisəsi
-QHT platforması
-Portfel və bloq kombinasiyası
+Korporativ və brend saytları
+Təhsil müəssisələrinin saytları
+Portfel və şəxsi brend platformaları
+QHT və info-rezurslar
 
 🧰 Texnologiyalar:
-Klassik HTML + templating (PHP, Twig, EJS)
-Laravel, Express.js, Django, Ruby on Rails
+HTML + templating (Twig, EJS, Liquid və s.)
+SSR və ya SSG framework-lər (Next.js, Nuxt.js, Astro, Hugo)
+Backend: Laravel, Express.js, Django, Ruby on Rails
 UI Kit: Tailwind, Material UI
-SSR (server-side rendering) tövsiyə olunur
+Hosting: Vercel, Netlify, traditional hosting
 
 🔵 3. CMS əsaslı saytlar
 🎯 Məqsəd:
-Kontentin idarəsi asan olan sistemlər — kontentsentrik layihələr üçün
+Kontent ağırlıqlı saytları texniki bacarığı olmayan istifadəçilər üçün asan idarə olunan etmək və sürətli yenilənməni təmin etmək.
 
 ✅ Üstünlüklər:
-Admin panel hazır gəlir
-Plugin və tema ekosistemi geniş
+Rahat və hazır admin panel
+Geniş plugin və tema ekosistemi
 Texniki olmayan istifadəçilər üçün rahatlıq
-SEO, cache, təhlükəsizlik pluginləri mövcuddur
+Kontent, SEO və təhlükəsizlik üçün əlavə modullar
+Çox istifadəçi və rol idarəetməsi
 
 ⚠️ Zəif cəhətlər:
-Performans zəif ola bilər (xüsusilə WordPress-də)
-Təhlükəsizlik açıqları pluginlərdən qaynaqlana bilər
-Ölçülənmə (scalability) limitlidir
+Klassik CMS-lərdə (xüsusilə WordPress) performans və miqyaslama limitləri
+Pluginlərdən qaynaqlanan təhlükəsizlik riskləri
+Bəzən köhnəlmiş kod bazası və çətin özəlləşdirmə
 
 💡 Uyğun istifadə hallar:
-Blog
-Xəbər portalları
-Əmlak, elan saytları
+Blog və xəbər portalları
+Əmlak, elan və məzmun platformaları
 Sadə e-ticarət (WooCommerce, VirtueMart)
 
 🧰 Populyar CMS-lər:
-WordPress
-Joomla
-Drupal
-Ghost (Node.js-based, minimalist bloq üçün)
+WordPress (ən populyar), Joomla, Drupal
+Ghost (Node.js-based, minimalist bloq üçün), OctoberCMS
+WooCommerce, VirtueMart (e-ticarət üçün)
+Hosting: Shared, VPS, Cloud
 
 🔵 4. Headless CMS əsaslı saytlar (JAMstack yanaşması)
 🎯 Məqsəd:
 Kontent backendi ilə UI frontendini ayıraraq modular və modern infrastruktur yaratmaq
 
 ✅ Üstünlüklər:
-Sürətli yükləmə (statik rendering + CDN)
+Sürətli yüklənmə (statik və ya hibrid rendering + CDN)
 Təhlükəsizlik yüksək (frontend və backend ayrı)
-Versiya nəzarəti (Git-inteqrasiya ilə)
-Rahat API ilə dinamik data inteqrasiyası
+Git versioning və avtomatlaşdırılmış deployment
+Rahat API və dinamik data inteqrasiyası
 
 ⚠️ Zəif cəhətlər:
-Təyinatlı olmayan istifadəçi üçün kurasiya çətin
-Admin panel özünə görə deyil, CMS tərəfindən verilir
+Qeyri-texniki istifadəçilər üçün idarəetmə daha çətin ola bilər
+Bütün admin panel imkanları hər zaman custom şəkildə əldə edilmir
 
 💡 Uyğun istifadə hallar:
 Developer portfel və blog
-Korporativ sayt + mobil app datasharing
+Korporativ sayt və mobil app üçün ortaq backend (app datasharing)
 SaaS və ya platforma saytları
 
 🧰 Texnologiyalar:
 Frontend: Next.js, Nuxt.js, Astro, Gatsby
-Backend (CMS): Strapi, Sanity, Contentful, Directus, Ghost API
-Deployment: Vercel, Netlify
+Backend (Headless CMS): Strapi, Sanity, Contentful, Directus, Ghost API
+Hosting (Deployment): Vercel, Netlify, Cloudflare Pages
 Git-based CMS-lər: Netlify CMS, Forestry
 
 🔵 5. Web App (SPA və ya MPA)
@@ -109,22 +111,22 @@ SPA (Single Page Application) – AJAX ilə bütün məzmun tək səhifədə də
 MPA (Multi Page Application) – hər səhifə serverdən ayrıca yüklənir
 
 🎯 Məqsəd:
-Kompleks funksiyalara malik tətbiqlər — CRM, admin panel, platformalar
+Kompleks və interaktiv tətbiqlər yaratmaq (platformalar, dashboardlar, CRM, sosial şəbəkə və s.).
 
 ✅ Üstünlüklər:
-Real-time dinamik UX
-Yüksək qarşılıqlı əlaqə (formlar, filterlər, dashboardlar)
-Websocket və API inteqrasiyası ilə güclü backend ünsiyyəti
+Real-time və yüksək dinamik UX
+Kompleks qarşılıqlı əlaqə və vizualizasiya (formlar, filterlər, dashboardlar)
+Websocket və API inteqrasiyası ilə güclü backend inteqrasiyası (REST, GraphQL, WebSockets)
+İstifadəçi autentifikasiyası və fərdi kontent
 
 ⚠️ Zəif cəhətlər:
-SEO çətinləşə bilər (SPA-lar üçün SSR və ya prerendering lazımdır)
+SPA-larda SEO yalnız SSR/prerendering ilə effektiv olur
 Kod bazası böyüdükcə komplekslik artır
 İlk yükləmə vaxtı uzun ola bilər (SPA)
 
 💡 Uyğun istifadə hallar:
-Admin panelləri
-Sosial platformalar
-SaaS dashboard-lar
+Admin panelləri və dashboardlar
+Sosial platformalar və SaaS dashboard-lar
 CRM, ERP, LMS sistemləri
 
 🧰 Texnologiyalar:
@@ -136,24 +138,24 @@ DB: PostgreSQL, Firebase, MongoDB
 
 🔵 6. Progressive Web App (PWA)
 🎯 Məqsəd:
-Veb saytın mobil tətbiq kimi işləməsini təmin etmək — offline işləmə, push bildirişlər və s.
+Veb saytın mobil tətbiq kimi işləməsini təmin etmək: offline rejim, push bildirişlər, “Add to Home Screen” və s.
 
 ✅ Üstünlüklər:
-Offline işləmə
-Add to Home Screen funksiyası
+Offline işləmə və caching
 Push notification dəstəyi
-Mobil app-lara alternativ kimi daha ucuz və çevik
+“Add to Home Screen” ilə mobil app təcrübəsi
+Native app-lara alternativ kimi daha əlçatan (ucuz) və çevikdir
 
 ⚠️ Zəif cəhətlər:
 iOS-də məhdud funksiyalar
 Native app kimi tam performans vermir
-Çoxlu caching idarəetməsi tələb edir
+Çoxlu caching və offline data idarəetməsi tələb edir
 
 💡 Uyğun istifadə hallar:
-Yerli biznes app-lar (market, restoran)
+Yerli biznes app-lar (market, restoran və s.)
 Offline məlumat baxışı (kataloq, xəbərlər)
 Sosial və ya kontent platformaları
-Məhsul izləmə / xəbərdarlıq sistemləri
+Məhsul izləmə və xəbərdarlıq sistemləri
 
 🧰 Texnologiyalar:
 Framework: Angular, React, Vue
