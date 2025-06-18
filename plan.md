@@ -1,7 +1,7 @@
 # INJECSIA UCMS - Universal Content Management System
 ## Müəllif: INFECSIA
 ### Versiya: 1.0.0 (2025-03-28)
-
+#### Headless CMS (JAMstack yanaşması) əsaslı.
 
 # MÜNDƏRİCAT
 
