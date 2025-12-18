@@ -1685,7 +1685,7 @@
 - Dependencies: 1-2 GB
 - Assets və media: 500 MB - 1 GB
 - Database schemas: 50-100 MB
-- Documentation: 200-300 MB
+- Documentation: 200-300 MB  
 **Final release package**: 2-4 GB
 
 
@@ -1695,14 +1695,14 @@
 #### a) Cloud Servislər
 - AWS/GCP/Azure: $5,000-8,000/ay
 - CDN xərcləri: $1,000-2,000/ay
-- Backup və DR: $1,000-1,500/ay
+- Backup və DR: $1,000-1,500/ay  
 **Toplam**: $84,000-138,000/il
 
 #### b) Lisenziyalar və Toollar
 - Monitoring toolları: $500-1,000/ay
 - CI/CD toolları: $200-400/ay
 - Security toolları: $1,000-1,500/ay
-- Database lisenziyaları: $2,000-3,000/ay
+- Database lisenziyaları: $2,000-3,000/ay  
 **Toplam**: $44,400-70,800/il
 
 #### c) Sertifikatlar və Audit
@@ -1765,7 +1765,7 @@
 - Infrastructure: ~$100,000
 - Team: ~$1,500,000
 - Tools və lisenziyalar: ~$60,000
-- Marketing və Sales: ~$200,000
+- Marketing və Sales: ~$200,000  
 **Toplam**: ~$1,860,000
 
 ### Break-even Analysis
