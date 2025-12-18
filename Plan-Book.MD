@@ -37,7 +37,6 @@
 1.3. Hədəf Auditoriya və İstifadə Sahələri
 
 1.4. Rəqabət Üstünlükləri
-
 1.5. Lisenziya və Hüquqi Aspektlər
 
 1.6. Məhsul Strategiyası
