@@ -30,10 +30,8 @@
 
 ## BÖLMƏ I: LAYİHƏ ƏSASLARI VƏ KONSEPTUAL BAXIŞ
 ### Fəsil 1: Layihəyə Giriş
-1.1. INJECSIA UCMS-in Tarixi və İnkişaf Yolu
-
-1.2. Missiya və Vizyon
-
+1.1. INJECSIA UCMS-in Tarixi və İnkişaf Yolu  
+1.2. Missiya və Vizyon  
 1.3. Hədəf Auditoriya və İstifadə Sahələri
 
 1.4. Rəqabət Üstünlükləri
