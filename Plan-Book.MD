@@ -31,17 +31,28 @@
 ## BÖLMƏ I: LAYİHƏ ƏSASLARI VƏ KONSEPTUAL BAXIŞ
 ### Fəsil 1: Layihəyə Giriş
 1.1. INJECSIA UCMS-in Tarixi və İnkişaf Yolu
+
 1.2. Missiya və Vizyon
+
 1.3. Hədəf Auditoriya və İstifadə Sahələri
+
 1.4. Rəqabət Üstünlükləri
+
 1.5. Lisenziya və Hüquqi Aspektlər
 
 1.6. Məhsul Strategiyası
+
     1.6.1. Bazar Mövqeyi
+
     1.6.2. Differensiasiya Strategiyası
+
     1.6.3. Go-to-Market Planı
+
     1.6.4. Monetizasiya Modeli
+
     1.6.5. Partnyorluq Strategiyası
+
+
 
 ### Fəsil 2: Sistem Arxitekturasının Əsasları
 2.1. Texnologiya Stack'i
