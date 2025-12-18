@@ -1708,7 +1708,7 @@
 #### c) Sertifikatlar və Audit
 - SOC 2 Type II: $30,000-40,000
 - ISO 27001: $20,000-30,000
-- PCI DSS: $15,000-25,000
+- PCI DSS: $15,000-25,000  
 **Toplam**: $65,000-95,000/il
 
 #### d) **Toplam**: $193,000 - $303,000/il
@@ -1725,7 +1725,7 @@
 - AI/ML Engineer: 1 nəfər
 - QA Engineers: 2 nəfər
 - Technical Architect: 1 nəfər
-- Product Manager: 1 nəfər
+- Product Manager: 1 nəfər  
 **Toplam**: 16 nəfər
 
 **İllik təxmini əmək haqqı xərcləri**: $1,200,000-1,800,000
