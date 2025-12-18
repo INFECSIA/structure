@@ -1,1 +1,0 @@
-Seninle hedsiz chox vacib bir proyektin temelini atmaq ugrunda deqiqliyin mueyyen olunmasi uchun br sohbete bashlamaq isteyirem, butun suallarima yalniz azerbaycan dilinde cavab vermeni, etrafli aydin ve en muasir hell yollari ile yanashi kohnelmish olsa da aktual olan her meqami nezere alaraq cavablamagini isteyirem. Mene dunyaca en mehshur, sosial shebeke, media platfomalari
